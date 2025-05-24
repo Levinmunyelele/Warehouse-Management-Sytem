@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Stock Entry – WMS X Electronics{% endblock %}
+
+{% block content %}
+<h2 class="text-xl font-semibold mb-4">Add Stock Entry</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="mb-4">
+      {% for category, message in messages %}
+        <li class="text-{{ 'green-600' if category == 'success' else 'red-600' }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+<script>
+  window.WMS_WAREHOUSES = {{ warehouses | tojson | safe }};
+</script>
+
+<form action="{{ url_for('add_stock_entry', entry_id=edit_entry.id) if edit_entry else url_for('add_stock_entry') }}"
+      class="space-y-4 bg-white p-6 rounded shadow max-w-md" method="POST">
+
+      {% if edit_entry %}
+        <input type="hidden" name="entry_id" value="{{ edit_entry.id }}">
+      {% endif %}
+
+  <!-- Item -->
+  <div>
+    <label class="block mb-1">Item</label>
+    <select name="item_id" class="w-full border p-2 rounded" required>
+      <option value="" disabled {% if not edit_entry %}selected{% endif %}>Select Item</option>
+      {% for item in items %}
+        <option value="{{ item.id }}" {% if edit_entry and item.id == edit_entry.item_id %}selected{% endif %}>
+          {{ item.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Warehouse -->
+  <div>
+    <label class="block mb-1">Warehouse</label>
+    <select name="warehouse_id" id="warehouseSelect" class="w-full border p-2 rounded" required>
+      <option value="" disabled {% if not edit_entry %}selected{% endif %}>Select Warehouse</option>
+      {% for wh in warehouses %}
+        <option value="{{ wh.id }}" {% if edit_entry and wh.id == edit_entry.warehouse_id %}selected{% endif %}>
+          {{ wh.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Hierarchy -->
+  <div>
+    <label class="block mb-1">Hierarchy</label>
+    <input type="text" id="hierarchyInput" class="w-full border p-2 rounded bg-gray-100"
+           placeholder="Auto-filled from warehouse" readonly />
+  </div>
+
+  <!-- Quantity -->
+  <div>
+    <label class="block mb-1">Quantity</label>
+    <input type="number" step="0.01" name="quantity" class="w-full border p-2 rounded" required
+    value="{{ edit_entry.quantity if edit_entry else '' }}">
+  </div>
+
+  <!-- Type -->
+  <div>
+    <label class="block mb-1">Type</label>
+    <select name="type" class="w-full border p-2 rounded" required>
+      <option value="" disabled {% if not edit_entry %}selected{% endif %}>Select Type</option>
+      <option value="IN" {% if edit_entry and edit_entry.type == 'IN' %}selected{% endif %}>IN</option>
+      <option value="OUT" {% if edit_entry and edit_entry.type == 'OUT' %}selected{% endif %}>OUT</option>
+    </select>
+  </div>
+
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+    {{ "Update" if edit_entry else "Submit" }}
+  </button>
+  
+</form>
+
+<script>
+  const warehouseSelect = document.getElementById('warehouseSelect');
+  const hierarchyInput = document.getElementById('hierarchyInput');
+
+  warehouseSelect.addEventListener('change', () => {
+    const selectedId = warehouseSelect.value;
+    const warehouse = window.WMS_WAREHOUSES.find(w => w.id == selectedId);
+    hierarchyInput.value = warehouse ? warehouse.hierarchy : '';
+  });
+</script>
+{% endblock %}

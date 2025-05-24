@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}Stock Entries – WMS X Electronics{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl font-bold mb-6">Stock Entries</h2>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+<!-- Search and Export Buttons -->
+<div class="flex flex-wrap justify-between items-center mb-4 gap-4">
+  <form method="get" action="{{ url_for('stock_entries') }}" class="flex flex-wrap gap-2">
+    <input type="text" name="item" placeholder="Item name" class="border rounded px-2 py-1"
+      value="{{ request.args.get('item', '') }}">
+    <input type="text" name="warehouse" placeholder="Warehouse" class="border rounded px-2 py-1"
+      value="{{ request.args.get('warehouse', '') }}">
+    <input type="date" name="start" class="border rounded px-2 py-1" value="{{ request.args.get('start', '') }}">
+    <input type="date" name="end" class="border rounded px-2 py-1" value="{{ request.args.get('end', '') }}">
+    <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded">Filter</button>
+    <a href="{{ url_for('stock_entries') }}" class="text-sm text-gray-600 hover:underline ml-2">Clear</a>
+  </form>
+
+  <div class="flex gap-2">
+    <a href="{{ url_for('export_stock_entries', format='excel', item=request.args.get('item', ''), warehouse=request.args.get('warehouse', ''), start=request.args.get('start', ''), end=request.args.get('end', '')) }}"
+      class="bg-green-600 text-white px-3 py-1 rounded">Export Excel</a>
+
+    <a href="{{ url_for('export_stock_entries', format='pdf', item=request.args.get('item', ''), warehouse=request.args.get('warehouse', ''), start=request.args.get('start', ''), end=request.args.get('end', '')) }}"
+      class="bg-red-600 text-white px-3 py-1 rounded">Export PDF</a>
+
+  </div>
+</div>
+
+<!-- Add New Entry -->
+<a href="{{ url_for('add_stock_entry') }}" class="text-blue-600 underline mb-4 inline-block">Add New Entry</a>
+
+<!-- Table -->
+<div class="overflow-x-auto">
+  <table class="min-w-full bg-white rounded shadow text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2">Date</th>
+        <th class="px-4 py-2">Item</th>
+        <th class="px-4 py-2">Type</th>
+        <th class="px-4 py-2">Quantity</th>
+        <th class="px-4 py-2">Warehouse</th>
+        <th class="px-4 py-2 text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in stock_entries %}
+      <tr class="border-t">
+        <td class="px-4 py-2">
+          {{ entry.date.strftime('%Y-%m-%d %H:%M') if entry.date else 'No date' }}
+        </td>
+        <td class="px-4 py-2">{{ entry.item.name }}</td>
+        <td class="px-4 py-2">{{ entry.type }}</td>
+        <td class="px-4 py-2">{{ entry.quantity }}</td>
+        <td class="px-4 py-2">{{ entry.warehouse.name }}</td>
+        <td class="px-4 py-2 text-center">
+          <a href="{{ url_for('edit_stock_entry', entry_id=entry.id) }}" class="text-blue-500 hover:underline mr-2">Edit</a>
+          <a href="{{ url_for('delete_stock_entry', entry_id=entry.id) }}" onclick="return confirm('Are you sure?');"
+            class="text-red-500 hover:underline">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+      {% if not stock_entries %}
+      <tr>
+        <td colspan="6" class="text-center text-gray-500 px-4 py-2">No stock entries found.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

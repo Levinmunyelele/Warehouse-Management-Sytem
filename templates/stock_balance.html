@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Stock Balance – WMS X Electronics{% endblock %}
+{% block content %}
+<h2 class="text-3xl font-bold mb-6">Stock Balance</h2>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<div class="flex justify-end mb-4">
+  <a href="{{ url_for('download_stock_report') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+    Download CSV
+  </a>
+</div>
+
+<div class="bg-white p-6 rounded shadow">
+  <table class="w-full text-left border">
+    <thead>
+      <tr>
+        <th class="border px-2 py-1">Item</th>
+        <th class="border px-2 py-1">Warehouse</th>
+        <th class="border px-2 py-1">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in stock_balance %}
+      <tr>
+        <td class="border px-2 py-1">{{ row.item }}</td>
+        <td class="border px-2 py-1">{{ row.warehouse }}</td>
+        <td class="border px-2 py-1">{{ row.balance }}</td>
+      </tr>
+      {% endfor %}
+      {% if not stock_balance %}
+      <tr>
+        <td colspan="3" class="text-center text-gray-500 py-2">No stock data available.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}WMS Dashboard{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-800 min-h-screen text-white p-6">
+        <h1 class="text-2xl font-bold mb-8">WMS <span class="text-blue-400">X Electronics</span></h1>
+        <nav class="space-y-4">
+            <a href="/" class="block">Dashboard</a>
+            <a href="/items" class="block">Items</a>
+            <a href="/warehouses" class="block">Warehouses</a>
+            <a href="/stock_entries" class="block">Stock Entries</a>
+            <a href="/stock_ledger" class="block">Stock Ledger</a>
+            <a href="/stock_balance" class="block">Stock Balance</a>
+            <a href="/logout" class="block text-red-400">Logout</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+</body>
+</html>

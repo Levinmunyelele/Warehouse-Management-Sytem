@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}Stock Ledger - WMS X Electronics{% endblock %}
+
+{% block content %}
+<h2 class="text-xl font-semibold mb-4">Stock Ledger</h2>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white rounded shadow">
+        <thead class="bg-gray-100 text-left">
+            <tr>
+                <th class="px-4 py-2">Date</th>
+                <th class="px-4 py-2">Item</th>
+                <th class="px-4 py-2">Type</th>
+                <th class="px-4 py-2">Quantity</th>
+                <th class="px-4 py-2">Warehouse</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr class="border-t">
+                <td class="px-4 py-2">{{ entry.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td class="px-4 py-2">{{ entry.item.name }}</td>
+                <td class="px-4 py-2">{{ entry.type }}</td>
+                <td class="px-4 py-2">{{ entry.quantity }}</td>
+                <td class="px-4 py-2">{{ entry.warehouse.name }}</td>
+            </tr>
+            {% endfor %}
+            {% if not entries %}
+            <tr>
+                <td colspan="5" class="text-center text-gray-500 px-4 py-2">No stock movements recorded.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

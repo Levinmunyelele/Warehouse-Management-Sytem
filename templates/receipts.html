@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Receipts - WMS X Electronics{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl font-bold mb-6">Receipts</h2>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<table class="min-w-full bg-white shadow rounded">
+    <thead>
+        <tr>
+            <th class="py-2 px-4 border-b">Date</th>
+            <th class="py-2 px-4 border-b">Item</th>
+            <th class="py-2 px-4 border-b">Warehouse</th>
+            <th class="py-2 px-4 border-b">Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for receipt in receipts %}
+        <tr class="hover:bg-gray-100">
+            <td class="py-2 px-4 border-b">{{ receipt.date.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td class="py-2 px-4 border-b">{{ receipt.item.name }}</td>
+            <td class="py-2 px-4 border-b">{{ receipt.warehouse.name }}</td>
+            <td class="py-2 px-4 border-b">{{ receipt.quantity }}</td>
+        </tr>
+        {% endfor %}
+        {% if not receipts %}
+        <tr>
+            <td colspan="4" class="text-center text-gray-500 py-4">No receipts available.</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

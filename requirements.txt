@@ -1,0 +1,6 @@
+flask
+flask_sqlalchemy
+flask_wtf
+flask_migrate
+wtforms
+pytest

@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% block title %}Items — WMS X Electronics{% endblock %}
+
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6">Items</h2>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+<!-- Add / Edit Form -->
+<form action="{{ url_for('items') }}" method="POST" class="bg-white p-6 rounded shadow max-w-md mb-8">
+  {% if edit_item %}
+    <input type="hidden" name="item_id" value="{{ edit_item.id }}">
+  {% endif %}
+
+  <h3 class="font-semibold text-lg mb-4">
+    {{ edit_item and 'Edit Item' or 'Add Item' }}
+  </h3>
+
+  <input
+    name="name"
+    placeholder="Name"
+    class="w-full p-2 border rounded mb-2"
+    value="{{ edit_item.name if edit_item }}"
+    required
+  >
+
+  <input
+    name="unit"
+    placeholder="Unit"
+    class="w-full p-2 border rounded mb-2"
+    value="{{ edit_item.unit if edit_item }}"
+  >
+
+  <textarea
+    name="description"
+    placeholder="Description"
+    class="w-full p-2 border rounded mb-4"
+  >{{ edit_item.description if edit_item }}</textarea>
+
+  <button
+    type="submit"
+    class="bg-blue-600 text-white px-4 py-2 rounded"
+  >
+    {{ edit_item and 'Save' or 'Add' }}
+  </button>
+
+  {% if edit_item %}
+  <a
+    href="{{ url_for('items') }}"
+    class="ml-4 text-gray-600 hover:underline"
+  >
+    Cancel
+  </a>
+  {% endif %}
+</form>
+
+<!-- Items Table -->
+<table class="min-w-full bg-white shadow rounded">
+  <thead>
+    <tr>
+      <th class="py-2 px-4 border-b">ID</th>
+      <th class="py-2 px-4 border-b">Name</th>
+      <th class="py-2 px-4 border-b">Unit</th>
+      <th class="py-2 px-4 border-b">Description</th>
+      <th class="py-2 px-4 border-b">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr class="hover:bg-gray-100">
+      <td class="py-2 px-4 border-b">{{ item.id }}</td>
+      <td class="py-2 px-4 border-b">{{ item.name }}</td>
+      <td class="py-2 px-4 border-b">{{ item.unit }}</td>
+      <td class="py-2 px-4 border-b">{{ item.description }}</td>
+      <td class="py-2 px-4 border-b space-x-2">
+        <a
+          href="{{ url_for('items', edit_id=item.id) }}"
+          class="text-yellow-600 hover:underline"
+        >Edit</a>
+        <form
+          action="{{ url_for('delete_item', item_id=item.id) }}"
+          method="POST"
+          class="inline"
+        >
+          <button
+            type="submit"
+            onclick="return confirm('Delete this item?');"
+            class="text-red-600 hover:underline"
+          >Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+
+    {% if not items %}
+    <tr>
+      <td colspan="5" class="text-center text-gray-500 py-4">No items available.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

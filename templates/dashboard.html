@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard – WMS X Electronics{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl font-bold mb-6">Dashboard</h2>
+
+<!-- Info Cards -->
+<div class="grid grid-cols-4 gap-4 mb-6">
+  <div class="bg-white p-6 shadow rounded">
+    <p class="text-2xl text-blue-600">{{ items|length }}</p>
+    <p>Items</p>
+  </div>
+  <div class="bg-white p-6 shadow rounded">
+    <p class="text-2xl text-green-600">{{ warehouses|length }}</p>
+    <p>Warehouses</p>
+  </div>
+  <div class="bg-white p-6 shadow rounded">
+    <p class="text-2xl text-yellow-600">{{ stock_entries_count }}</p>
+    <p>Stock Entries</p>
+  </div>
+  <div class="bg-white p-6 shadow rounded">
+    <p class="text-2xl text-red-600">{{ stock_ledger_count }}</p>
+    <p>Stock Ledger</p>
+  </div>
+</div>
+
+<!-- Forms -->
+<div class="grid grid-cols-2 gap-6 mb-6">
+  <form action="{{ url_for('items') }}" method="POST" class="bg-white p-6 rounded shadow max-w-md mb-8">
+    {% if edit_item %}
+      <input type="hidden" name="item_id" value="{{ edit_item.id }}">
+    {% endif %}
+  
+    <h3 class="font-semibold text-lg mb-4">
+      {{ edit_item and 'Edit Item' or 'Add Item' }}
+    </h3>
+  
+    <input
+      name="name"
+      placeholder="Name"
+      class="w-full p-2 border rounded mb-2"
+      value="{{ edit_item.name if edit_item }}"
+      required
+    >
+  
+    <input
+      name="unit"
+      placeholder="Unit"
+      class="w-full p-2 border rounded mb-2"
+      value="{{ edit_item.unit if edit_item }}"
+    >
+  
+    <textarea
+      name="description"
+      placeholder="Description"
+      class="w-full p-2 border rounded mb-4"
+    >{{ edit_item.description if edit_item }}</textarea>
+  
+    <button
+      type="submit"
+      class="bg-blue-600 text-white px-4 py-2 rounded"
+    >
+      {{ edit_item and 'Save' or 'Add' }}
+    </button>
+  
+    {% if edit_item %}
+    <a
+      href="{{ url_for('items') }}"
+      class="ml-4 text-gray-600 hover:underline"
+    >
+      Cancel
+    </a>
+    {% endif %}
+  </form>
+
+  <!-- Add Warehouse -->
+  <form action="{{ url_for('warehouses') }}" method="POST" class="bg-white p-6 rounded shadow max-w-md mb-8">
+    {% if edit_wh %}
+      <input type="hidden" name="warehouse_id" value="{{ edit_wh.id }}">
+    {% endif %}
+  
+    <h3 class="font-semibold text-lg mb-4">
+      {{ 'Edit Warehouse' if edit_wh else 'Add Warehouse' }}
+    </h3>
+  
+    <input
+      name="warehouse_name"
+      placeholder="Warehouse Name"
+      class="w-full p-2 border rounded mb-4"
+      value="{{ edit_wh.name if edit_wh else '' }}"
+      required
+    >
+    <div>
+    <label for="hierarchy" class="block text-sm font-medium text-gray-700 mb-1">Hierarchy Level</label>
+    <select name="hierarchy" required>
+      <option value="" disabled {{ not edit_wh and 'selected' }}>Select level</option>
+      <option value="National" {{ edit_wh and edit_wh.hierarchy=='National' and 'selected' }}>National</option>
+      <option value="Region"   {{ edit_wh and edit_wh.hierarchy=='Region'   and 'selected' }}>Region</option>
+      <option value="Zone"     {{ edit_wh and edit_wh.hierarchy=='Zone'     and 'selected' }}>Zone</option>
+      <option value="Subzone"  {{ edit_wh and edit_wh.hierarchy=='Subzone'  and 'selected' }}>Subzone</option>
+    </select>
+  </div>
+    
+<div>
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
+      {{ 'Save' if edit_wh else 'Add' }}
+    </button>
+  </div>
+  
+    {% if edit_wh %}
+      <a href="{{ url_for('dashboard') }}" class="ml-4 text-gray-600 hover:underline">Cancel</a>
+    {% endif %}
+  </form>
+    
+</div>
+
+<!-- Stock Balance Table -->
+<div class="bg-white p-6 rounded shadow">
+  <h3 class="text-lg font-semibold mb-4">Stock Balance</h3>
+  <table class="w-full text-left border">
+    <thead>
+      <tr>
+        <th class="border px-2 py-1">Item</th>
+        <th class="border px-2 py-1">Warehouse</th>
+        <th class="border px-2 py-1">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in stock_balance %}
+      <tr>
+        <td class="border px-2 py-1">{{ row.item }}</td>
+        <td class="border px-2 py-1">{{ row.warehouse }}</td>
+        <td class="border px-2 py-1">{{ row.balance }}</td>
+      </tr>
+      {% endfor %}
+      {% if not stock_balance %}
+      <tr>
+        <td colspan="3" class="text-center text-gray-500 py-2">No stock data available</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
