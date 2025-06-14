@@ -5,93 +5,86 @@
 ---
 This Warehouse Management System is a lightweight inventory tracking solution built with **Flask** and **SQLAlchemy**. It's designed to manage stock entries (IN/OUT), track current stock balances, and visualize the structure of warehouses organized in a hierarchy: National > Regional > Zone > Subzone.
 
-### Features
----
-* CRUD operations for **Items** and **Warehouses**
-* Hierarchical structure: **National > Regional > Zone > Subzone**
-* Stock entry tracking (IN/OUT) for each warehouse
-* Dynamic stock balance computation
-* Dashboard displaying:
-    * Total items
-    * Total warehouses
-    * Total stock entries
-    * Current stock balances grouped by item and warehouse
-* Export stock balances to:
-    * **PDF**
-    * **Excel**
+Tech Stack
+Backend: Flask (Python)
 
-### Technologies Used
----
-* **Python 3.x**
-* **Flask**
-* **SQLAlchemy** (ORM)
-* **Jinja2** (templating)
-* **SQLite** (can be replaced with PostgreSQL/MySQL)
-* **Bootstrap** (for frontend UI)
-* `openpyxl`, `pandas`, `reportlab` (for PDF/Excel export)
-
-### Project Structure
----
-Project Structure
------------------
-.
-├── app.py                  # Main Flask app
-├── models.py               # SQLAlchemy models (Item, Warehouse, Zone, StockEntry)
-├── templates/              # Jinja2 HTML templates
-├── static/                 # Static files (CSS, JS)
-├── exports/                # PDF and Excel export files
-└── migrations/             # Alembic migration files
-
-### Database Models
----
-* **Item**: `id`, `name`, `unit`, `description`
-* **Warehouse**: `id`, `name`, `hierarchy`
-* **Zone**: `id`, `warehouse_id`
-* **StockEntry**: `id`, `item_id`, `warehouse_id`, `quantity`, `type`, `date`
-
-### Usage Instructions
----
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/Levinmunyelele/Warehouse-Management-System.git](https://github.com/Levinmunyelele/Warehouse-Management-System.git)
-    cd Warehouse-Management-System
-    ```
-
-2.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Initialize the Database:**
-    ```bash
-    flask db init
-    flask db migrate -m "Initial migration"
-    flask db upgrade
-    ```
-
-4.  **Run the Application:**
-    ```bash
-    flask run
-    ```
-    Visit `http://127.0.0.1:5000` in your browser to access the dashboard.
-
-### Future Improvements
----
-* User authentication with roles (e.g., admin, manager)
-* Reports and charts
-* Stock thresholds and alerts
-* RESTful API support
+ORM: SQLAlchemy
+Database: SQLite (for development/testing)
+Frontend: HTML, Jinja2 templates, Tailwind CSS
+Export Formats: PDF (via WeasyPrint), Excel (via openpyxl)
+Testing: pytest, Flask-Testing
+Version Control: Git + GitHub
 
 ---
 
-### Author
----
-**Levin Munyelele**
-* Email: munyelelelevin@gmail.com
-* GitHub: [https://github.com/Levinmunyelele](https://github.com/Levinmunyelele)
+Design Overview
+
+The system is designed with a clean MVC-style structure and follows modular development principles.
+Models: Item, Warehouse, Zone, StockEntry
+Zones & Hierarchy:
+The warehouse structure includes hierarchy levels like National, Regional, Zone, and Subzone.
+Each zone is associated with a warehouse and helps in stock segmentation.
+Dashboard: Displays live summaries of Items, Warehouses, Stock Entries, and Ledger.
+Templates: Reusable layout with dynamic loading via Flask and Tailwind.
 
 ---
 
-### License
----
-This project is licensed under the [MIT License](LICENSE).
+Features
+
+Item Management: Add, edit, and track inventory items.
+Warehouse Management: Add warehouses and structure them hierarchically.
+Zone Management: Group warehouses into zones for better stock control.
+Stock Movement: Record IN/OUT stock entries.
+
+Dashboard Summary:
+Total number of items, warehouses, stock entries, and stock ledger movements.
+Real-time stock balance per item and warehouse.
+
+Export Capabilities:
+Download stock movement logs as PDF or Excel.
+Custom filters supported before export.
+
+Unit Tests: Key functionality tested using pytest.
+
+Navigation Guide
+
+/ → Dashboard
+/items → Add/Edit Items
+/warehouses → Add Warehouses
+/stock_entries → Add/Review Stock Movement
+/stock_ledger → Stock Movement History
+/export_stock_entries?format=pdf → Download ledger as PDF
+/export_stock_entries?format=excel → Download ledger as Excel
+
+Screenshots
+
+Dashboard
+![Dashboard](Screenshots/Dashboard.png)
+
+Stock Entry Form
+![Stock Entry](Screenshots/Add stock entry.png)
+
+Stock Entry
+![Stock Entry](Screenshots/Stock_entries.png)
+
+Stock Ledger with Export Buttons
+![Stock Ledger](Screenshots/Stock ledger.png)
+
+Warehouse
+![Warehouse](Screenshots/Warehouse.png)
+
+Stock balance
+![Stock balance](Screenshots/Stock balance.png)
+
+
+Running & Testing Locally
+
+git clone https://github.com/Levinmunyelele/Warehouse-Management-Sytem.git
+cd Warehouse-Management-Sytem
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+flask run
+
+To run tests:
+pytest
