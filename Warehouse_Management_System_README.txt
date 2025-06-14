@@ -58,23 +58,23 @@ Navigation Guide
 
 Screenshots
 
-Dashboard
+Dashboard  
 ![Dashboard](Screenshots/Dashboard.png)
 
-Stock Entry Form
-![Stock Entry](Screenshots/Add stock entry.png)
+Stock Entry Form  
+![Stock Entry](Screenshots/Add%20stock%20entry.png)
 
-Stock Entry
+Stock Entry  
 ![Stock Entry](Screenshots/Stock_entries.png)
 
-Stock Ledger with Export Buttons
-![Stock Ledger](Screenshots/Stock ledger.png)
+Stock Ledger with Export Buttons  
+![Stock Ledger](Screenshots/Stock%20ledger.png)
 
-Warehouse
+Warehouse  
 ![Warehouse](Screenshots/Warehouse.png)
 
-Stock balance
-![Stock balance](Screenshots/Stock balance.png)
+Stock Balance  
+![Stock balance](Screenshots/Stock%20balance.png)
 
 
 Running & Testing Locally
